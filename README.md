@@ -24,7 +24,7 @@ do this with the -b or --block flags, as above.
 
 ### Within a project
 
-In your `build.boot`, add `[pandeiro/boot-http "0.1.0"]` to :dependencies and
+In your `build.boot`, add `[pandeiro/boot-http "0.2.0"]` to :dependencies and
 `(require '[pandeiro.http :refer :all])`. Then the command is shorter:
 
 ```bash
