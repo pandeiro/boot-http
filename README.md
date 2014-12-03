@@ -12,8 +12,15 @@ entirety on the example at [boot-cljs-example][boot-cljs-example].
 This serves the **current directory** at port **3000**:
 
 ```bash
-boot -d pandeiro/boot-http serve
+boot -d pandeiro/boot-http serve -b
 ```
+
+### Composable by default
+
+By default, the serve task doesn't block, so it can be chained with
+other tasks in a pipeline. However if you just want to serve files,
+you need to block to keep the task from exiting immediately. You can
+do this with the -b or --block flags, as above.
 
 ### Within a project
 
@@ -21,7 +28,7 @@ In your `build.boot`, add `[pandeiro/boot-http "0.1.0"]` to :dependencies and
 `(require '[pandeiro.http :refer :all])`. Then the command is shorter:
 
 ```bash
-boot serve
+boot serve -b
 ```
 
 ### Other options
@@ -29,7 +36,7 @@ boot serve
 You can set the directory and port to serve on, too:
 
 ```bash
-boot serve -d target -p 8888
+boot serve -d target -p 8888 -b
 ```
 
 Once included in `build.boot` as a dependency, all the `serve`
@@ -37,16 +44,6 @@ task's options can be inspected:
 
 ```bash
 boot serve -h
-```
-
-### Chaining the serve task within a pipeline
-
-By default, the serve task blocks, similar to most simple file servers.
-If you want to carry out other tasks in a pipeline, however, you
-can specify it to **NOT block** by adding the (-n | --no-block) flag, eg:
-
-```bash
-boot serve -n watch cljs
 ```
 
 ## Acknowledgements

@@ -14,13 +14,13 @@
    on port 3000 by default."
   [d dir      PATH     str  "The directory to serve."
    p port     PORT     int  "The port to listen on."
-   n no-block          bool "Non-blocking (to compose serve with other tasks)"]
+   b block             bool "Blocking (for standalone use)"]
   (let [worker   (pod/make-pod
                   {:dependencies '[[ring/ring-jetty-adapter "1.3.1"]
                                    [compojure "1.2.1"]]})
         dir      (or dir ".")
         port     (or port 3000)
-        no-block (or no-block false)]
+        block    (or block false)]
     (core/cleanup
      (util/info "\n<< stopping Jetty... >>\n")
      (pod/eval-in worker (.stop server)))
@@ -32,4 +32,6 @@
                     (def server
                       (run-jetty (files "/" {:root ~dir}) {:port ~port :join? false})))
        (util/info "<< started Jetty on http://localhost:%d (serving: %s) >>\n" port dir))
-     (if no-block identity (task/wait)))))
+     (if block
+       (task/wait)
+       identity))))
