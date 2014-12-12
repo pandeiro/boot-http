@@ -6,6 +6,10 @@
    [boot.core          :as core]
    [boot.task.built-in :as task]))
 
+(def ^:private deps
+  '[[ring/ring-jetty-adapter "1.3.1"]
+    [compojure "1.2.1"]])
+
 (core/deftask serve
   "Start a web server on localhost and serve a directory, blocking
    the boot task pipeline by default.
@@ -15,23 +19,22 @@
   [d dir      PATH     str  "The directory to serve."
    p port     PORT     int  "The port to listen on."
    b block             bool "Blocking (for standalone use)"]
-  (let [worker   (pod/make-pod
-                  {:dependencies '[[ring/ring-jetty-adapter "1.3.1"]
-                                   [compojure "1.2.1"]]})
+  (let [worker   (pod/make-pod (assoc-in (core/get-env) [:dependencies] deps))
         dir      (or dir ".")
         port     (or port 3000)
         block    (or block false)]
     (core/cleanup
      (util/info "\n<< stopping Jetty... >>\n")
-     (pod/eval-in worker (.stop server)))
+     (pod/with-eval-in worker (.stop server)))
     (comp
-     (core/with-pre-wrap
-       (pod/eval-in worker
-                    (require '[ring.adapter.jetty :refer [run-jetty]]
-                             '[compojure.route    :refer [files]])
-                    (def server
-                      (run-jetty (files "/" {:root ~dir}) {:port ~port :join? false})))
-       (util/info "<< started Jetty on http://localhost:%d (serving: %s) >>\n" port dir))
+     (core/with-pre-wrap fileset
+       (pod/with-eval-in worker
+         (require '[ring.adapter.jetty :refer [run-jetty]]
+                  '[compojure.route    :refer [files]])
+         (def server
+           (run-jetty (files "/" {:root ~dir}) {:port ~port :join? false})))
+       (util/info "<< started Jetty on http://localhost:%d (serving: %s) >>\n" port dir)
+       fileset)
      (if block
        (task/wait)
        identity))))
