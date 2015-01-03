@@ -54,10 +54,14 @@
 ;;
 ;; Jetty
 ;;
-(defn server [{:keys [dir port]}]
-  (let [handler (if dir
-                  (directories-and-resources dir)
-                  resources)]
+(defn server [{:keys [dir port handler]}]
+  (let [handler (if handler
+                  (do
+                    (require (symbol (namespace handler)) :reload)
+                    (resolve handler))
+                  (if dir
+                    (directories-and-resources dir)
+                    resources))]
     (run-jetty (-> handler
                  (ring.middleware.content-type/wrap-content-type)
                  (ring.middleware.not-modified/wrap-not-modified))

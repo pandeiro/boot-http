@@ -20,6 +20,7 @@
   Listens on port 3000 by default."
 
   [d dir  PATH str "The directory to serve."
+   H handler SYM sym "The ring handler to serve."
    p port PORT int "The port to listen on. (Default: 3000)"]
 
   (let [port   (or port default-port)]
@@ -32,7 +33,7 @@
     (core/with-pre-wrap fileset
       (pod/with-eval-in serve-worker
         (require '[pandeiro.http.impl :as http])
-        (def server (http/server {:dir ~dir, :port ~port})))
+        (def server (http/server {:dir ~dir, :port ~port, :handler ~handler})))
       (util/info "<< started Jetty on http://localhost:%d >>\n" port)
       fileset)))
 
