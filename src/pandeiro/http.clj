@@ -13,7 +13,7 @@
     [ring/ring-core "1.3.1"]])
 
 (def serve-worker
-  (pod/make-pod (update-in (core/get-env) [:dependencies] conj serve-deps)))
+  (pod/make-pod (update-in (core/get-env) [:dependencies] into serve-deps)))
 
 (deftask serve
   "Start a web server on localhost, serving resources and optionally a directory.
