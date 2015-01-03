@@ -59,13 +59,13 @@
         (wrap-file dir {:index-files? false})
         (wrap-resource ""))))
 
-(defn resources-handler [{:keys [prefix]
-                          :or {prefix ""}}]
+(defn resources-handler [{:keys [resource-root]
+                          :or {resource-root ""}}]
   (-> (fn [{:keys [request-method uri] :as req}]
         (if (and (= request-method :get) (= uri "/"))
-          (some-> (resource-response "index.html" {:root prefix})
+          (some-> (resource-response "index.html" {:root resource-root})
                   (content-type "text/html"))))
-      (wrap-resource prefix)))
+      (wrap-resource resource-root)))
 
 ;;
 ;; Jetty
