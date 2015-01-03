@@ -29,7 +29,7 @@
 
     (core/with-pre-wrap fileset
       (pod/with-call-in worker
-        (def server (http/server {:dir ~dir, :port port})))
+        (def server (http/server {:dir ~dir, :port ~port})))
       (util/info "<< started Jetty on http://localhost:%d >>\n" port)
       fileset)))
 
