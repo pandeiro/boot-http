@@ -19,9 +19,9 @@
   "Start a web server on localhost, serving resources and optionally a directory.
   Listens on port 3000 by default."
 
-  [d dir  PATH str "The directory to serve."
-   H handler SYM sym "The ring handler to serve."
-   p port PORT int "The port to listen on. (Default: 3000)"]
+  [d dir     PATH str "The directory to serve."
+   H handler SYM  sym "The ring handler to serve."
+   p port    PORT int "The port to listen on. (Default: 3000)"]
 
   (let [port   (or port default-port)]
 
