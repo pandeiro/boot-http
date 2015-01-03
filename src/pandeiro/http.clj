@@ -33,7 +33,7 @@
     (core/with-pre-wrap fileset
       (pod/with-eval-in serve-worker
         (require '[pandeiro.http.impl :as http])
-        (def server (http/server {:dir ~dir, :port ~port, :handler ~handler})))
+        (def server (http/server {:dir ~dir, :port ~port, :handler '~handler})))
       (util/info "<< started Jetty on http://localhost:%d >>\n" port)
       fileset)))
 
