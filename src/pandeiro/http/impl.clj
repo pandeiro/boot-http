@@ -11,7 +11,7 @@
 (def index-files #{"index.html" "index.htm"})
 
 (defn index-file-exists? [files]
-  (first (filter #(index-files (.getName %)) files)))
+  (first (filter #(index-files (s/lower-case (.getName %))) files)))
 
 (defn path-diff [root-path path]
   (s/replace path (re-pattern (str "^" root-path)) ""))
