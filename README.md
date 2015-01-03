@@ -91,5 +91,3 @@ your option) any later version.
 [boot-cljs-example]: https://github.com/adzerk/boot-cljs-example
 [installboot]:       https://github.com/boot-clj/boot#install
 [boot-discourse]:    http://hoplon.discoursehosting.net/t/boot-http-0-4-0/361
-
-
