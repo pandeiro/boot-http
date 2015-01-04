@@ -2,7 +2,7 @@
  :source-paths #{"src"}
  :dependencies '[[org.clojure/clojure "1.6.0"     :scope "provided"]
                  [boot/core           "2.0.0-rc5" :scope "provided"]
-                 [adzerk/bootlaces    "0.1.5"     :scope "test"]])
+                 [adzerk/bootlaces    "0.1.8"     :scope "test"]])
 
 (require
  '[adzerk.bootlaces :refer :all] ;; tasks: build-jar push-snapshot push-release
