@@ -1,4 +1,4 @@
-(ns pandeiro.http.impl
+(ns pandeiro.boot-http.impl
   (:import  [java.net URLDecoder])
   (:require [clojure.java.io :as io]
             [clojure.string  :as s]

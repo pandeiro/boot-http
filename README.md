@@ -27,7 +27,7 @@ boot -d pandeiro/boot-http serve -h # show serve's usage
 ### Within a project
 
 If you already have a `build.boot`, add `[pandeiro/boot-http "0.4.0"]` to `:dependencies` and
-`(require '[pandeiro.http :refer :all])`. Then the command is shorter, e.g.:
+`(require '[pandeiro.boot-http :refer :all])`. Then the command is shorter, e.g.:
 
 ```bash
 boot serve -d target wait
