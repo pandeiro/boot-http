@@ -2,7 +2,12 @@
   (:import  [java.net URLDecoder])
   (:require [clojure.java.io :as io]
             [clojure.string  :as s]
-            [ring.middleware file resource content-type not-modified]
+            [ring.util.response :refer [resource-response content-type]]
+            [ring.middleware
+             [file :refer [wrap-file]]
+             [resource :refer [wrap-resource]]
+             [content-type :refer [wrap-content-type]]
+             [not-modified :refer [wrap-not-modified]]]
             [ring.adapter.jetty :refer [run-jetty]]))
 
 ;;
@@ -43,26 +48,33 @@
 ;;
 ;; Handlers
 ;;
-(defn resources [req]
-  (ring.middleware.resource/resource-request req ""))
+(defn resolve-ring-handler [{:keys [handler]}]
+  (when handler
+    (require (symbol (namespace handler)) :reload)
+    (resolve handler)))
 
-(defn directories-and-resources [dir]
-  (-> (index-for dir)
-    (ring.middleware.file/wrap-file dir {:index-files? false})
-    (ring.middleware.resource/wrap-resource "")))
+(defn dir-handler [{:keys [dir]}]
+  (when dir
+    (-> (index-for dir)
+        (wrap-file dir {:index-files? false})
+        (wrap-resource ""))))
+
+(defn resources-handler [{:keys [resource-root]
+                          :or {resource-root ""}}]
+  (-> (fn [{:keys [request-method uri] :as req}]
+        (if (and (= request-method :get) (= uri "/"))
+          (some-> (resource-response "index.html" {:root resource-root})
+                  (content-type "text/html"))))
+      (wrap-resource resource-root)))
 
 ;;
 ;; Jetty
 ;;
-(defn server [{:keys [dir port handler]}]
-  (let [handler (if handler
-                  (do
-                    (require (symbol (namespace handler)) :reload)
-                    (resolve handler))
-                  (if dir
-                    (directories-and-resources dir)
-                    resources))]
+(defn server [{:keys [port] :as opts}]
+  (let [handler (or (resolve-ring-handler opts)
+                    (dir-handler opts)
+                    (resources-handler opts))]
     (run-jetty (-> handler
-                 (ring.middleware.content-type/wrap-content-type)
-                 (ring.middleware.not-modified/wrap-not-modified))
+                   (wrap-content-type)
+                   (wrap-not-modified))
                {:port port :join? false})))
