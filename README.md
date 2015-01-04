@@ -60,7 +60,7 @@ or
 
 ### Composability
 
-You may have noticed the `wait` task being used after all the invocations so far. This is
+You may have noticed the `wait` task being used after all the command-line invocations so far. This is
 because by itself, the `serve` task does not block and exits immediately.
 
 What good is that? It means you can compose with other tasks.
