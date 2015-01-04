@@ -26,7 +26,7 @@ boot -d pandeiro/boot-http serve -h # show serve's usage
 
 ### Within a project
 
-If you already have a `build.boot`, add `[pandeiro/boot-http "0.4.0"]` to `:dependencies` and
+If you already have a `build.boot`, add `[pandeiro/boot-http "0.4.1"]` to `:dependencies` and
 `(require '[pandeiro.boot-http :refer :all])`.
 
 You can use boot-http for three different use cases:

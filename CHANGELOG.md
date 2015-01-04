@@ -1,3 +1,7 @@
+# 0.4.1
+
+- Add -r/--resource-root to specify a route prefix for resources
+
 # 0.4.0
 
 - Remove -b/--block option (use wait instead)
