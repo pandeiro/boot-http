@@ -1,4 +1,4 @@
-(ns pandeiro.http
+(ns pandeiro.boot-http
   {:boot/export-tasks true}
   (:require
    [boot.pod           :as pod]
@@ -23,17 +23,16 @@
    H handler SYM  sym "The ring handler to serve."
    p port    PORT int "The port to listen on. (Default: 3000)"]
 
-  (let [port   (or port default-port)]
-
+  (let [port  (or port default-port)
+        start (delay
+                (pod/with-eval-in serve-worker
+                  (require '[pandeiro.boot-http.impl :as http])
+                  (def server
+                    (http/server {:dir ~dir, :port ~port, :handler '~handler})))
+                (util/info "<< started Jetty on http://localhost:%d >>\n" port))]
     (core/cleanup
-     (util/info "\n<< stopping Jetty... >>\n")
-     (pod/with-eval-in serve-worker
-       (.stop server)))
-
-    (core/with-pre-wrap fileset
+      (util/info "\n<< stopping Jetty... >>\n")
       (pod/with-eval-in serve-worker
-        (require '[pandeiro.http.impl :as http])
-        (def server (http/server {:dir ~dir, :port ~port, :handler '~handler})))
-      (util/info "<< started Jetty on http://localhost:%d >>\n" port)
-      fileset)))
+        (.stop server)))
+    (core/with-post-wrap fileset @start)))
 
