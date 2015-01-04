@@ -39,7 +39,7 @@ boot serve wait
 (serve)
 ```
 
-#### 2. Serve files on choosen directory
+#### 2. Serve files on chosen directory
 
 ```bash
 boot serve -d target wait
