@@ -27,17 +27,35 @@ boot -d pandeiro/boot-http serve -h # show serve's usage
 ### Within a project
 
 If you already have a `build.boot`, add `[pandeiro/boot-http "0.4.0"]` to `:dependencies` and
-`(require '[pandeiro.boot-http :refer :all])`. Then the command is shorter, e.g.:
+`(require '[pandeiro.boot-http :refer :all])`.
+
+You can use boot-http for three different use cases:
+
+#### 1. Serve classpath resources
+
+```bash
+boot serve wait
+# or from build.boot or repl
+(serve)
+```
+
+#### 2. Serve files on choosen directory
 
 ```bash
 boot serve -d target wait
+# or
+(serve :dir "target")
 ```
 
 That would serve the `target` directory if it exists. Instead of specifying a directory,
 you can also specify a ring handler:
 
+#### 3. Start server with given Ring handler
+
 ```bash
 boot serve -H myapp.server/app wait
+or
+(serve :handler 'myapp.server/app)
 ```
 
 ### Composability
@@ -51,7 +69,14 @@ In [boot-cljs-example][boot-cljs-example], for example, `serve` is
 invoked like so:
 
 ```bash
-boot serve -d target/ watch speak reload cljs-repl cljs -usO none
+boot serve watch speak reload cljs-repl cljs -usO none
+# or
+(comp (serve)
+      (watch)
+      (speak)
+      (reload)
+      (cljs-repl)
+      (cljs :optimizations :none))
 ```
 
 In that case, since serve is given a directory, it serves the directory and whatever
