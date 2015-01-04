@@ -21,7 +21,3 @@
       :scm         {:url "https://github.com/pandeiro/boot-http"}
       :license     {:name "Eclipse Public License"
                     :url  "http://www.eclipse.org/legal/epl-v10.html"}})
-
-(require
- '[pandeiro.http :refer :all])
-
