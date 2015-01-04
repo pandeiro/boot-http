@@ -35,4 +35,4 @@
       (util/info "\n<< stopping Jetty... >>\n")
       (pod/with-eval-in serve-worker
         (.stop server)))
-    (core/with-post-wrap fileset @start)))
+    (core/with-pre-wrap fileset @start fileset)))
