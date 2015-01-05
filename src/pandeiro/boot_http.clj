@@ -24,15 +24,16 @@
    r resource-root ROOT str "The root prefix when serving resources from classpath"
    p port    PORT int "The port to listen on. (Default: 3000)"]
 
-  (let [port  (or port default-port)
-        start (delay
-                (pod/with-eval-in serve-worker
-                  (require '[pandeiro.boot-http.impl :as http])
-                  (def server
-                    (http/server {:dir ~dir, :port ~port, :handler '~handler :resource-root ~resource-root})))
-                (util/info "<< started Jetty on http://localhost:%d >>\n" port))]
+  (let [port   (or port default-port)
+        server (pod/with-eval-in serve-worker (gensym))
+        start  (delay
+                 (pod/with-eval-in serve-worker
+                   (require '[pandeiro.boot-http.impl :as http])
+                   (def ~server
+                     (http/server {:dir ~dir, :port ~port, :handler '~handler :resource-root ~resource-root})))
+                 (util/info "<< started Jetty on http://localhost:%d >>\n" port))]
     (core/cleanup
       (util/info "\n<< stopping Jetty... >>\n")
       (pod/with-eval-in serve-worker
-        (.stop server)))
+        (.stop ~server)))
     (core/with-pre-wrap fileset @start fileset)))
