@@ -10,7 +10,7 @@
  '[boot.util        :as util]
  '[boot.core        :as core])
 
-(def +version+ "0.4.1")
+(def +version+ "0.4.2")
 (bootlaces! +version+)
 
 (task-options!
