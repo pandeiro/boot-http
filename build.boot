@@ -11,6 +11,7 @@
  '[boot.pod         :as pod]
  '[boot.util        :as util]
  '[boot.core        :as core])
+ '[pandeiro.boot-http :refer :all])
 
 (def +version+ "0.4.2")
 (bootlaces! +version+)
