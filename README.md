@@ -1,4 +1,4 @@
-# boot-http
+# boot-http [![Build Status][badge]][build]
 
 A simple HTTP `serve` task for use with [the boot build tool][boot]
 that can serve resources, directories or a typical ring handler.
@@ -116,3 +116,4 @@ your option) any later version.
 [boot-cljs-example]: https://github.com/adzerk/boot-cljs-example
 [installboot]:       https://github.com/boot-clj/boot#install
 [boot-discourse]:    http://hoplon.discoursehosting.net/t/boot-http-0-4-0/361
+[badge]:             https://travis-ci.org/pandeiro/boot-http.png?branch=master
