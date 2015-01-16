@@ -4,8 +4,8 @@
                  [boot/core               "2.0.0-rc6" :scope "provided"]
                  [adzerk/bootlaces        "0.1.8"     :scope "test"]
                  [adzerk/boot-test        "1.0.3"     :scope "test"]
-                 [ring/ring-jetty-adapter "1.3.1"     :scope "test"]
-                 [ring/ring-core          "1.3.1"     :scope "test"]])
+                 [ring/ring-jetty-adapter "1.3.2"     :scope "test"]
+                 [ring/ring-core          "1.3.2"     :scope "test"]])
 
 (require
  '[adzerk.bootlaces :refer :all] ;; tasks: build-jar push-snapshot push-release

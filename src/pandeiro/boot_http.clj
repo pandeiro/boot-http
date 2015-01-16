@@ -9,8 +9,8 @@
 (def default-port 3000)
 
 (def serve-deps
-  '[[ring/ring-jetty-adapter "1.3.1"]
-    [ring/ring-core "1.3.1"]])
+  '[[ring/ring-jetty-adapter "1.3.2"]
+    [ring/ring-core "1.3.2"]])
 
 (deftask serve
   "Start a web server on localhost, serving resources and optionally a directory.
