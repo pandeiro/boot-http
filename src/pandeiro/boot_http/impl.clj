@@ -2,13 +2,12 @@
   (:import  [java.net URLDecoder])
   (:require [clojure.java.io :as io]
             [clojure.string  :as s]
-            [ring.util.response :refer [resource-response content-type not-found]]
+            [ring.util.response :refer [resource-response content-type]]
             [ring.middleware
              [file :refer [wrap-file]]
              [resource :refer [wrap-resource]]
              [content-type :refer [wrap-content-type]]
-             [not-modified :refer [wrap-not-modified]]]
-            [ring.adapter.jetty :refer [run-jetty]]))
+             [not-modified :refer [wrap-not-modified]]]))
 
 ;;
 ;; Directory serving
@@ -80,13 +79,19 @@
       (wrap-resource resource-root)))
 
 ;;
-;; Jetty
+;; Jetty / HTTP Kit
 ;;
-(defn server [{:keys [port] :as opts}]
+(defn server [{:keys [port httpkit] :as opts}]
+  (if httpkit
+    (require 'org.httpkit.server)
+    (require 'ring.adapter.jetty))
   (let [handler (or (resolve-ring-handler opts)
                     (dir-handler opts)
-                    (resources-handler opts))]
-    (run-jetty (-> handler
-                   (wrap-content-type)
-                   (wrap-not-modified))
-               {:port port :join? false})))
+                    (resources-handler opts))
+        run     (if httpkit
+                  (resolve 'org.httpkit.server/run-server)
+                  (resolve 'ring.adapter.jetty/run-jetty))]
+    (run (-> handler
+           (wrap-content-type)
+           (wrap-not-modified))
+      {:port port :join? false})))
