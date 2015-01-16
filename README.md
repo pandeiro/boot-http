@@ -40,9 +40,7 @@ You can use boot-http for three different use cases:
 #### 1. Serve classpath resources
 
 ```bash
-boot serve wait
-# or from build.boot or repl
-(serve)
+boot serve wait   # or from REPL: (boot (serve) (wait))
 ```
 
 #### 2. Serve files on chosen directory
