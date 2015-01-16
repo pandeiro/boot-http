@@ -89,13 +89,17 @@ resources can be found on the classpath, and then gets out of the way.
 
 ### Other options
 
-#### Port (-p/--port)
+#### -p / --port
+
+Use a specific port.
 
 ```bash
 boot -d pandeiro/boot-http serve -d . -p 8888 wait
 ```
 
-#### Server (-k/--httpkit)
+#### -k / --httpkit
+
+Use the HTTP Kit webserver instead of Jetty.
 
 ```bash
 boot -d pandeiro/boot-http serve -d . -k wait  # uses httpkit
