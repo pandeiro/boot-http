@@ -5,7 +5,7 @@ that can serve resources, directories or a typical ring handler.
 
 [](dependency)
 ```clojure
-[foo/bar "1.2.3"] ;; latest release
+[pandeiro/boot-http "0.5.0"] ;; latest release
 ```
 [](/dependency)
 
