@@ -56,8 +56,8 @@
 (defn dir-handler [{:keys [dir]}]
   (when dir
     (-> (index-for dir)
-        (wrap-file dir {:index-files? false})
-        (wrap-resource ""))))
+      (wrap-file dir {:index-files? false})
+      (wrap-resource ""))))
 
 (defn resources-handler [{:keys [resource-root]
                           :or {resource-root ""}}]
