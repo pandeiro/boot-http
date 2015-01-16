@@ -3,6 +3,11 @@
 A simple HTTP `serve` task for use with [the boot build tool][boot]
 that can serve resources, directories or a typical ring handler.
 
+[](dependency)
+```clojure
+[foo/bar "1.2.3"] ;; latest release
+```
+[](/dependency)
 
 ## Usage
 
@@ -26,8 +31,9 @@ boot -d pandeiro/boot-http serve -h # show serve's usage
 
 ### Within a project
 
-If you already have a `build.boot`, add `[pandeiro/boot-http "0.4.2"]` to `:dependencies` and
-`(require '[pandeiro.boot-http :refer :all])`.
+If you already have a `build.boot`, add
+[](dependency) `[foo/bar "1.2.3"]` [](/dependency) to `:dependencies`
+and `(require '[pandeiro.boot-http :refer :all])`.
 
 You can use boot-http for three different use cases:
 
@@ -42,9 +48,7 @@ boot serve wait
 #### 2. Serve files on chosen directory
 
 ```bash
-boot serve -d target wait
-# or
-(serve :dir "target")
+boot serve -d target wait   # or at the REPL: (boot (serve :dir "target") (wait))
 ```
 
 That would serve the `target` directory if it exists. Instead of specifying a directory,
@@ -53,15 +57,14 @@ you can also specify a ring handler:
 #### 3. Start server with given Ring handler
 
 ```bash
-boot serve -H myapp.server/app wait
-or
-(serve :handler 'myapp.server/app)
+boot serve -H myapp.server/app wait   # (boot (serve :handler 'myapp.server/app) (wait))
 ```
 
 ### Composability
 
-You may have noticed the `wait` task being used after all the command-line invocations so far. This is
-because by itself, the `serve` task does not block and exits immediately.
+You may have noticed the `wait` task being used after all the
+command-line invocations so far. This is because by itself, the
+`serve` task does not block and thus exits immediately.
 
 What good is that? It means you can compose with other tasks.
 
@@ -70,7 +73,11 @@ invoked like so:
 
 ```bash
 boot serve watch speak reload cljs-repl cljs -usO none
-# or
+```
+
+which is, again, the same as:
+
+```clojure
 (comp (serve)
       (watch)
       (speak)
@@ -79,22 +86,27 @@ boot serve watch speak reload cljs-repl cljs -usO none
       (cljs :optimizations :none))
 ```
 
-In that case, since serve is given a directory, it serves the directory and whatever
+In that case, since `serve` is given a directory, it serves the directory and whatever
 resources can be found on the classpath, and then gets out of the way.
 
 ### Other options
 
-You can set the port to serve on, too:
+#### Port (-p/--port)
 
 ```bash
-boot -d pandeiro/http serve -d . -p 8888 wait
+boot -d pandeiro/boot-http serve -d . -p 8888 wait
 ```
 
+#### Server (-k/--httpkit)
+
+```bash
+boot -d pandeiro/boot-http serve -d . -k wait  # uses httpkit
+```
 
 ## API and Roadmap
 
-Right now that is about it. It basically blends the functionality of `python3 -m http.server` and
-a subset of `lein ring server`.
+Right now that is about it. It basically blends the functionality of
+`python3 -m http.server` and a subset of `lein ring server`.
 
 Feel free to add issues or comment [here][boot-discourse] if
 you have any ideas.
@@ -102,7 +114,8 @@ you have any ideas.
 
 ## Acknowledgements
 
-The boot guys basically wrote all of this or walked me through any parts I had to change. Thanks!
+The boot guys basically wrote all of this or walked me through any
+parts I had to change. Thanks!
 
 
 ## License

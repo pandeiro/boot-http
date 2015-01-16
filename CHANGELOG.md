@@ -1,3 +1,8 @@
+# 0.5.0
+
+- Fix: directory listings and files take precedence over resources with :dir option
+- Add: -k/--httpkit option to use Http-kit instead of Jetty
+
 # 0.4.2
 
 - Fix: create a pod for each task instance instead of sharing one

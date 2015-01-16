@@ -12,7 +12,8 @@
  '[adzerk.boot-test :refer :all]
  '[pandeiro.boot-http :refer :all])
 
-(def +version+ "0.4.2")
+(def +version+ "0.5.0")
+
 (bootlaces! +version+)
 
 (task-options!
@@ -21,5 +22,4 @@
       :description "Boot task to serve HTTP."
       :url         "https://github.com/pandeiro/boot-http"
       :scm         {:url "https://github.com/pandeiro/boot-http"}
-      :license     {:name "Eclipse Public License"
-                    :url  "http://www.eclipse.org/legal/epl-v10.html"}})
+      :license     {"Eclipse Public License" "http://www.eclipse.org/legal/epl-v10.html"}})
