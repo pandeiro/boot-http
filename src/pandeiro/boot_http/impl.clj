@@ -2,7 +2,7 @@
   (:import  [java.net URLDecoder])
   (:require [clojure.java.io :as io]
             [clojure.string  :as s]
-            [ring.util.response :refer [resource-response content-type]]
+            [ring.util.response :refer [resource-response content-type not-found]]
             [ring.middleware
              [file :refer [wrap-file]]
              [resource :refer [wrap-resource]]
@@ -45,6 +45,9 @@
                                      "<ul>%s</ul></body>")
                                 (apply str (map (list-item root-path) files))))}))))))
 
+(defn wrap-index [handler dir]
+  (index-for dir))
+
 ;;
 ;; Handlers
 ;;
@@ -55,9 +58,10 @@
 
 (defn dir-handler [{:keys [dir]}]
   (when dir
-    (-> (index-for dir)
+    (-> not-found
+      (wrap-resource "")
       (wrap-file dir {:index-files? false})
-      (wrap-resource ""))))
+      (wrap-index dir))))
 
 (defn resources-handler [{:keys [resource-root]
                           :or {resource-root ""}}]
