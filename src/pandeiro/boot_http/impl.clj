@@ -34,7 +34,7 @@
   (let [root-path (or (.getPath (io/file dir)) "")]
     (fn [{:keys [uri] :as req}]
       (let [directory (io/file (filepath-from-uri root-path uri))]
-        (when (.exists directory)
+        (when (.isDirectory directory)
           (let [files (sort (.listFiles directory))]
             {:status  200
              :headers {"Content-Type" "text/html"}
@@ -46,20 +46,28 @@
                                 (apply str (map (list-item root-path) files))))}))))))
 
 (defn wrap-index [handler dir]
-  (index-for dir))
+  (fn [req]
+    (or ((index-for dir) req)
+        (handler req))))
 
 ;;
 ;; Handlers
 ;;
+(defn- not-found [_] ; ring.util.response version has no Content-Type
+  {:status  404
+   :headers {"Content-Type" "text/plain; charset=utf-8"}
+   :body    "Not found"})
+
 (defn resolve-ring-handler [{:keys [handler]}]
   (when handler
     (require (symbol (namespace handler)) :reload)
     (resolve handler)))
 
-(defn dir-handler [{:keys [dir]}]
+(defn dir-handler [{:keys [dir resource-root]
+                    :or {resource-root ""}}]
   (when dir
     (-> not-found
-      (wrap-resource "")
+      (wrap-resource resource-root)
       (wrap-file dir {:index-files? false})
       (wrap-index dir))))
 
