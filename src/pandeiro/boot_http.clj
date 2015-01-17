@@ -43,7 +43,7 @@
                       "<< started %s on http://localhost:%d >>\n"
                       server-name port))]
     (core/cleanup
-      (util/info "\n<< stopping %s... >>\n" server-name)
+      (util/info "<< stopping %s... >>\n" server-name)
       (pod/with-eval-in worker
         (if ~httpkit
           (server)
