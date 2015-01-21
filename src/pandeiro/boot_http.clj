@@ -17,6 +17,9 @@
 (def httpkit-dep
   '[http-kit "2.1.18"])
 
+(defn- silence-jetty! []
+  (.put (System/getProperties) "org.eclipse.jetty.LEVEL" "WARN"))
+
 (deftask serve
   "Start a web server on localhost, serving resources and optionally a directory.
   Listens on port 3000 by default."
@@ -44,6 +47,8 @@
                        (util/info
                         "<< started %s on http://localhost:%d >>\n"
                         server-name port)))]
+    (when (and silent (not httpkit))
+      (silence-jetty!))
     (core/cleanup
      (when-not silent
        (util/info "<< stopping %s... >>\n" server-name))
