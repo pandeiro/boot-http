@@ -1,3 +1,7 @@
+# 0.5.1
+
+- Add: silent mode (-s/--silent) to silence output
+
 # 0.5.0
 
 - Fix: directory listings and files take precedence over resources with :dir option
