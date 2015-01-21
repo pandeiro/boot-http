@@ -105,6 +105,10 @@ Use the HTTP Kit webserver instead of Jetty.
 boot -d pandeiro/boot-http serve -d . -k wait  # uses httpkit
 ```
 
+#### -s / --silent
+
+Silences all output.
+
 ## API and Roadmap
 
 Right now that is about it. It basically blends the functionality of
