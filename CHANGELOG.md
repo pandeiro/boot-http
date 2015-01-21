@@ -1,3 +1,7 @@
+# 0.5.2
+
+- Fix: reduce Jetty logging level when --silent
+
 # 0.5.1
 
 - Add: silent mode (-s/--silent) to silence output
