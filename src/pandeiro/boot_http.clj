@@ -26,6 +26,8 @@
 
   [d dir           PATH str  "The directory to serve."
    H handler       SYM  sym  "The ring handler to serve."
+   i init          SYM  sym  "A function to run prior to starting the server."
+   c cleanup       SYM  sym  "A function to run after the server stops."
    r resource-root ROOT str  "The root prefix when serving resources from classpath"
    p port          PORT int  "The port to listen on. (Default: 3000)"
    k httpkit            bool "Use Http-kit server instead of Jetty"
@@ -38,7 +40,10 @@
         server-name (if httpkit "HTTP Kit" "Jetty")
         start       (delay
                      (pod/with-eval-in worker
-                       (require '[pandeiro.boot-http.impl :as http])
+                       (require '[pandeiro.boot-http.impl :as http]
+                                '[pandeiro.boot-http.util :as u])
+                       (when '~init
+                         (u/resolve-and-invoke '~init))
                        (def server
                          (http/server
                           {:dir ~dir, :port ~port, :handler '~handler
@@ -55,7 +60,9 @@
      (pod/with-eval-in worker
        (if ~httpkit
          (server)
-         (.stop server))))
+         (.stop server))
+       (when '~cleanup
+         (u/resolve-and-invoke '~cleanup))))
     (core/with-pre-wrap fileset
       @start
       fileset)))

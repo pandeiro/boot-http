@@ -5,7 +5,7 @@ that can serve resources, directories or a typical ring handler.
 
 [](dependency)
 ```clojure
-[pandeiro/boot-http "0.5.2"] ;; latest release
+[pandeiro/boot-http "0.6.0"] ;; latest release
 ```
 [](/dependency)
 
@@ -104,6 +104,10 @@ Use the HTTP Kit webserver instead of Jetty.
 ```bash
 boot -d pandeiro/boot-http serve -d . -k wait  # uses httpkit
 ```
+
+#### -i / --init and -c / --cleanup
+
+Setup and teardown functions to run.
 
 #### -s / --silent
 

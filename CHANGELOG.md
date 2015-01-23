@@ -1,3 +1,7 @@
+# 0.6.0
+
+- Add: init and cleanup arguments for running functions before and after server
+
 # 0.5.2
 
 - Fix: reduce Jetty logging level when --silent
