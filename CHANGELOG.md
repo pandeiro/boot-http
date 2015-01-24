@@ -1,3 +1,7 @@
+# 0.6.1
+
+- Bump HTTP Kit to 2.1.19 to fix RejectedExecutionException
+
 # 0.6.0
 
 - Add: init and cleanup arguments for running functions before and after server
