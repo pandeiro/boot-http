@@ -9,7 +9,8 @@
 (def default-port 3000)
 
 (def serve-deps
-  '[[ring/ring-core "1.3.2"]])
+  '[[ring/ring-core "1.3.2"]
+    [ring/ring-devel "1.3.2"]])
 
 (def jetty-dep
   '[ring/ring-jetty-adapter "1.3.2"])
@@ -31,7 +32,8 @@
    r resource-root ROOT str  "The root prefix when serving resources from classpath"
    p port          PORT int  "The port to listen on. (Default: 3000)"
    k httpkit            bool "Use Http-kit server instead of Jetty"
-   s silent             bool "Silent-mode (don't output anything)"]
+   s silent             bool "Silent-mode (don't output anything)"
+   R reload             bool "Reload modified namespaces on each request."]
 
   (let [port        (or port default-port)
         deps        (conj serve-deps (if httpkit httpkit-dep jetty-dep))
@@ -46,8 +48,9 @@
                          (u/resolve-and-invoke '~init))
                        (def server
                          (http/server
-                          {:dir ~dir, :port ~port, :handler '~handler
-                           :httpkit ~httpkit, :resource-root ~resource-root})))
+                          {:dir ~dir, :port ~port, :handler '~handler,
+                           :reload '~reload, :httpkit ~httpkit,
+                           :resource-root ~resource-root})))
                      (when-not silent
                        (util/info
                         "<< started %s on http://localhost:%d >>\n"

@@ -5,7 +5,7 @@ that can serve resources, directories or a typical ring handler.
 
 [](dependency)
 ```clojure
-[pandeiro/boot-http "0.6.1"] ;; latest release
+[pandeiro/boot-http "0.6.2"] ;; latest release
 ```
 [](/dependency)
 
@@ -55,7 +55,7 @@ you can also specify a ring handler:
 #### 3. Start server with given Ring handler
 
 ```bash
-boot serve -H myapp.server/app wait   # (boot (serve :handler 'myapp.server/app) (wait))
+boot serve -H myapp.server/app -R wait   # (boot (serve :handler 'myapp.server/app :reload true) (wait))
 ```
 
 ### Composability

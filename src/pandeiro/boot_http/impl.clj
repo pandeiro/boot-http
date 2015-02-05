@@ -7,7 +7,8 @@
              [file :refer [wrap-file]]
              [resource :refer [wrap-resource]]
              [content-type :refer [wrap-content-type]]
-             [not-modified :refer [wrap-not-modified]]]))
+             [not-modified :refer [wrap-not-modified]]
+             [reload :refer [wrap-reload]]]))
 
 ;;
 ;; Directory serving
@@ -57,10 +58,12 @@
    :headers {"Content-Type" "text/plain; charset=utf-8"}
    :body    "Not found"})
 
-(defn resolve-ring-handler [{:keys [handler]}]
+(defn ring-handler [{:keys [handler reload]}]
   (when handler
     (require (symbol (namespace handler)) :reload)
-    (resolve handler)))
+    (if reload
+      (wrap-reload (resolve handler))
+      (resolve handler))))
 
 (defn dir-handler [{:keys [dir resource-root]
                     :or {resource-root ""}}]
@@ -85,7 +88,7 @@
   (if httpkit
     (require 'org.httpkit.server)
     (require 'ring.adapter.jetty))
-  (let [handler (or (resolve-ring-handler opts)
+  (let [handler (or (ring-handler opts)
                     (dir-handler opts)
                     (resources-handler opts))
         run     (if httpkit
