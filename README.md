@@ -113,6 +113,10 @@ Setup and teardown functions to run.
 
 Silences all output.
 
+#### -R / --reload
+
+Wrap provided ring handler with ring-reload.
+
 ## API and Roadmap
 
 Right now that is about it. It basically blends the functionality of
