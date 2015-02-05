@@ -58,8 +58,10 @@
     (when (and silent (not httpkit))
       (silence-jetty!))
     (core/cleanup
-     (when-not silent
-       (util/info "<< stopping %s... >>\n" server-name))
+     (pod/with-eval-in worker
+       (when server
+         (when-not silent
+           (util/info "<< stopping %s... >>\n" server-name))))
      (pod/with-eval-in worker
        (if ~httpkit
          (server)
