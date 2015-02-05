@@ -5,14 +5,15 @@
                  [adzerk/bootlaces        "0.1.9"     :scope "test"]
                  [adzerk/boot-test        "1.0.3"     :scope "test"]
                  [ring/ring-jetty-adapter "1.3.2"     :scope "test"]
-                 [ring/ring-core          "1.3.2"     :scope "test"]])
+                 [ring/ring-core          "1.3.2"     :scope "test"]
+                 [ring/ring-devel         "1.3.2"     :scope "test"]])
 
 (require
  '[adzerk.bootlaces :refer :all] ;; tasks: build-jar push-snapshot push-release
  '[adzerk.boot-test :refer :all]
  '[pandeiro.boot-http :refer :all])
 
-(def +version+ "0.6.1")
+(def +version+ "0.6.2")
 
 (bootlaces! +version+)
 

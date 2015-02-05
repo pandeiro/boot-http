@@ -1,3 +1,7 @@
+# 0.6.2
+
+- Add: -R/--reload flag to reload modified namespaces on each request
+
 # 0.6.1
 
 - Bump HTTP Kit to 2.1.19 to fix RejectedExecutionException
