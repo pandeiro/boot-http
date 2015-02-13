@@ -16,7 +16,7 @@
   '[ring/ring-jetty-adapter "1.3.2"])
 
 (def httpkit-dep
-  '[http-kit "2.1.19"])
+  '[pandeiro/http-kit "2.1.20-SNAPSHOT"])
 
 (defn- silence-jetty! []
   (.put (System/getProperties) "org.eclipse.jetty.LEVEL" "WARN"))
