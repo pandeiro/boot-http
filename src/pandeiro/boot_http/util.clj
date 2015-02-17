@@ -1,6 +1,9 @@
 (ns pandeiro.boot-http.util)
 
-(defn resolve-and-invoke [sym]
+(defn resolve-sym [sym]
   (require (symbol (namespace sym)) :reload)
-  (let [sym-fn (resolve sym)]
+  (resolve sym))
+
+(defn resolve-and-invoke [sym]
+  (let [sym-fn (resolve-sym sym)]
     (sym-fn)))
