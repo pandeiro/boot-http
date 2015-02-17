@@ -8,7 +8,8 @@
              [resource :refer [wrap-resource]]
              [content-type :refer [wrap-content-type]]
              [not-modified :refer [wrap-not-modified]]
-             [reload :refer [wrap-reload]]]))
+             [reload :refer [wrap-reload]]]
+            [pandeiro.boot-http.util :as u]))
 
 ;;
 ;; Directory serving
@@ -60,10 +61,9 @@
 
 (defn ring-handler [{:keys [handler reload]}]
   (when handler
-    (require (symbol (namespace handler)) :reload)
     (if reload
-      (wrap-reload (resolve handler))
-      (resolve handler))))
+      (wrap-reload (u/resolve-sym handler))
+      (u/resolve-sym handler))))
 
 (defn dir-handler [{:keys [dir resource-root]
                     :or {resource-root ""}}]
