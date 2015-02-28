@@ -65,9 +65,15 @@
       (wrap-reload (u/resolve-sym handler))
       (u/resolve-sym handler))))
 
+(defn- maybe-create-dir! [dir]
+  (let [dir-file (io/file dir)]
+    (if-not (.exists dir-file)
+      (.mkdir dir-file))))
+
 (defn dir-handler [{:keys [dir resource-root]
                     :or {resource-root ""}}]
   (when dir
+    (maybe-create-dir! dir)
     (-> not-found
       (wrap-resource resource-root)
       (wrap-file dir {:index-files? false})
