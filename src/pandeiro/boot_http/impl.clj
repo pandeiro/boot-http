@@ -9,7 +9,8 @@
              [content-type :refer [wrap-content-type]]
              [not-modified :refer [wrap-not-modified]]
              [reload :refer [wrap-reload]]]
-            [pandeiro.boot-http.util :as u]))
+            [pandeiro.boot-http.util :as u]
+            [boot.util :refer [warn]]))
 
 ;;
 ;; Directory serving
@@ -67,7 +68,8 @@
 
 (defn- maybe-create-dir! [dir]
   (let [dir-file (io/file dir)]
-    (if-not (.exists dir-file)
+    (when-not (.exists dir-file)
+      (warn "Directory '%s' was not found. Creating it..." dir)
       (.mkdir dir-file))))
 
 (defn dir-handler [{:keys [dir resource-root]
