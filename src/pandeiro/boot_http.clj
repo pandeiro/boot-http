@@ -25,7 +25,7 @@
   "Start a web server on localhost, serving resources and optionally a directory.
   Listens on port 3000 by default."
 
-  [d dir           PATH str  "The directory to serve."
+  [d dir           PATH str  "The directory to serve; created if doesn't exist."
    H handler       SYM  sym  "The ring handler to serve."
    i init          SYM  sym  "A function to run prior to starting the server."
    c cleanup       SYM  sym  "A function to run after the server stops."
