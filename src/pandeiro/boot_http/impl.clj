@@ -70,7 +70,7 @@
   (let [dir-file (io/file dir)]
     (when-not (.exists dir-file)
       (warn "Directory '%s' was not found. Creating it..." dir)
-      (.mkdir dir-file))))
+      (.mkdirs dir-file))))
 
 (defn dir-handler [{:keys [dir resource-root]
                     :or {resource-root ""}}]
