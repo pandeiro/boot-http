@@ -84,9 +84,12 @@
 (defn resources-handler [{:keys [resource-root]
                           :or {resource-root ""}}]
   (-> (fn [{:keys [request-method uri] :as req}]
-        (if (and (= request-method :get) (= uri "/"))
-          (some-> (resource-response "index.html" {:root resource-root})
-                  (content-type "text/html"))))
+        (if (and (= request-method :get))
+          ; Remove start slash and add end slash
+          (let [uri (if (.startsWith uri "/") (.substring uri 1) uri)
+                uri (if (.endsWith uri "/") uri (str uri "/"))]
+            (some-> (resource-response (str uri "index.html") {:root resource-root})
+                    (content-type "text/html")))))
       (wrap-resource resource-root)))
 
 ;;
