@@ -1,3 +1,7 @@
+# 0.6.3
+
+- Add: automatic handling of slashes on index.html resources
+
 # 0.6.2
 
 - Add: -R/--reload flag to reload modified namespaces on each request
