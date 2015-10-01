@@ -33,7 +33,9 @@
    p port          PORT int  "The port to listen on. (Default: 3000)"
    k httpkit            bool "Use Http-kit server instead of Jetty"
    s silent             bool "Silent-mode (don't output anything)"
-   R reload             bool "Reload modified namespaces on each request."]
+   R reload             bool "Reload modified namespaces on each request."
+   n nrepl         REPL edn  "nREPL server parameters (e.g. \"{:port 3001}\")"
+   t top-level          bool "Run server outside of pod in top-level boot process." ]
 
   (let [port        (or port default-port)
         deps        (conj serve-deps (if httpkit httpkit-dep jetty-dep))
