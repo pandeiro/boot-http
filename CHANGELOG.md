@@ -1,3 +1,8 @@
+# 0.7.0
+
+- Add: -n/--nrepl flag for nREPL access to http server
+- Bumped dependencies
+
 # 0.6.3
 
 - Add: automatic handling of slashes on index.html resources

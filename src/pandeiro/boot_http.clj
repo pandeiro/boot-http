@@ -34,8 +34,7 @@
    k httpkit            bool "Use Http-kit server instead of Jetty"
    s silent             bool "Silent-mode (don't output anything)"
    R reload             bool "Reload modified namespaces on each request."
-   n nrepl         REPL edn  "nREPL server parameters (e.g. \"{:port 3001}\")"
-   t top-level          bool "Run server outside of pod in top-level boot process." ]
+   n nrepl         REPL edn  "nREPL server parameters e.g. \"{:port 3001}\""]
 
   (let [port        (or port default-port)
         deps        (conj serve-deps (if httpkit httpkit-dep jetty-dep))
@@ -45,14 +44,23 @@
         start       (delay
                      (pod/with-eval-in worker
                        (require '[pandeiro.boot-http.impl :as http]
-                                '[pandeiro.boot-http.util :as u])
+                                '[pandeiro.boot-http.util :as u]
+                                '[clojure.tools.nrepl.server :refer [start-server]])
                        (when '~init
                          (u/resolve-and-invoke '~init))
                        (def server
                          (http/server
                           {:dir ~dir, :port ~port, :handler '~handler,
                            :reload '~reload, :httpkit ~httpkit,
-                           :resource-root ~resource-root})))
+                           :resource-root ~resource-root}))
+                       (def repl-server
+                         (if ~nrepl
+                           (let [bind (if (:bind ~nrepl) (:bind ~nrepl) "127.0.0.1")
+                                 repl-server (if (:port ~nrepl)
+                                               (start-server :port (:port ~nrepl) :bind bind)
+                                               (start-server :bind bind))]
+                             (println "boot-http nREPL started on " bind " port " (:port repl-server))
+                             repl-server))))
                      (when-not silent
                        (util/info
                         "<< started %s on http://localhost:%d >>\n"
@@ -63,7 +71,10 @@
      (pod/with-eval-in worker
        (when server
          (when-not silent
-           (util/info "<< stopping %s... >>\n" server-name))))
+           (util/info "<< stopping %s... >>\n" server-name)))
+       (when repl-server
+         (println "stopping boot-http nREPL server")
+         (.stop repl-server)))
      (pod/with-eval-in worker
        (if ~httpkit
          (server)
