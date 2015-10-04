@@ -1,4 +1,4 @@
-# 0.7.0
+# 0.7.0-SNAPSHOT
 
 - Add: -n/--nrepl flag for nREPL access to http server
 - Bumped dependencies
