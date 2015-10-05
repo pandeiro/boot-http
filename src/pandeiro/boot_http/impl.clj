@@ -10,7 +10,7 @@
              [not-modified :refer [wrap-not-modified]]
              [reload :refer [wrap-reload]]]
             [pandeiro.boot-http.util :as u]
-            [boot.util :refer [warn]]))
+            [boot.util :as util]))
 
 ;;
 ;; Directory serving
@@ -69,7 +69,7 @@
 (defn- maybe-create-dir! [dir]
   (let [dir-file (io/file dir)]
     (when-not (.exists dir-file)
-      (warn "Directory '%s' was not found. Creating it..." dir)
+      (util/warn "Directory '%s' was not found. Creating it..." dir)
       (.mkdirs dir-file))))
 
 (defn dir-handler [{:keys [dir resource-root]
@@ -109,3 +109,19 @@
            (wrap-content-type)
            (wrap-not-modified))
       {:port port :join? false})))
+
+;;
+;; nREPL
+;;
+
+(defn nrepl-server [{:keys [nrepl]}]
+  (require 'clojure.tools.nrepl.server)
+  (let [bind         (or (:bind ~nrepl) "127.0.0.1")
+        start-server (resolve 'clojure.tools.nrepl.server/start-server)
+        repl-server  (if (:port ~nrepl)
+                       (start-server :port (:port ~nrepl) :bind bind)
+                       (start-server :bind bind))]
+    (util/info
+     "Started boot-http nREPL on nrepl://%s:%d\n"
+     bind (:port repl-server))
+    repl-server))
