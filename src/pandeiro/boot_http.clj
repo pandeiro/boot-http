@@ -74,8 +74,7 @@
            (util/info "Stopping %s\n" server-name)))
        (when nrepl-server
          (util/info "Stopping boot-http nREPL server")
-         (.stop nrepl-server)))
-     (pod/with-eval-in worker
+         (.stop nrepl-server))
        (if ~httpkit
          (server)
          (.stop server))
