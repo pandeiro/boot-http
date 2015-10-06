@@ -116,10 +116,10 @@
 
 (defn nrepl-server [{:keys [nrepl]}]
   (require 'clojure.tools.nrepl.server)
-  (let [bind         (or (:bind ~nrepl) "127.0.0.1")
+  (let [{:keys [bind port] :or {bind "127.0.0.1"}} nrepl
         start-server (resolve 'clojure.tools.nrepl.server/start-server)
-        repl-server  (if (:port ~nrepl)
-                       (start-server :port (:port ~nrepl) :bind bind)
+        repl-server  (if port
+                       (start-server :port port :bind bind)
                        (start-server :bind bind))]
     (util/info
      "Started boot-http nREPL on nrepl://%s:%d\n"
