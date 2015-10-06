@@ -21,3 +21,7 @@
       :url         "https://github.com/pandeiro/boot-http"
       :scm         {:url "https://github.com/pandeiro/boot-http"}
       :license     {"Eclipse Public License" "http://www.eclipse.org/legal/epl-v10.html"}})
+
+(deftask test-boot-http []
+  (merge-env! :dependencies serve-deps)
+  (test :namespaces #{'pandeiro.boot-http-tests}))

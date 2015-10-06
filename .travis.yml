@@ -6,4 +6,4 @@ install:
   - chmod 755 boot
   - ./boot -V
 script:
-  - ./boot test -n pandeiro.boot-http-tests
+  - ./boot test-boot-http
