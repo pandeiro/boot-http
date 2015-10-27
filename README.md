@@ -108,7 +108,7 @@ boot -d pandeiro/boot-http serve -d . -k wait  # uses httpkit
 #### -n / --nrepl (Added in 0.7.0-SNAPSHOT release)
 
 Start an nREPL server for access to the http server. Accepts
-```:port``` and ```:bind``` options for setting nREPL server IP
+`:port` and `:bind` options for setting nREPL server IP
 and port.
 
 ```bash
