@@ -47,7 +47,7 @@
         worker      (pod/make-pod (update-in (core/get-env) [:dependencies]
                                              into deps))
         server-name (if httpkit "HTTP Kit" "Jetty")
-        env-dirs    (vec (core/get-env :directories))
+        env-dirs    (vec (core/get-env :source-paths))
         start       (delay
                      (pod/with-eval-in worker
                        (require '[pandeiro.boot-http.impl :as http]
