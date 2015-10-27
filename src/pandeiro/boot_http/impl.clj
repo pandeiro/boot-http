@@ -60,10 +60,10 @@
    :headers {"Content-Type" "text/plain; charset=utf-8"}
    :body    "Not found"})
 
-(defn ring-handler [{:keys [handler reload]}]
+(defn ring-handler [{:keys [handler reload env-dirs]}]
   (when handler
     (if reload
-      (wrap-reload (u/resolve-sym handler))
+      (wrap-reload (u/resolve-sym handler) {:dirs (or env-dirs ["src"])})
       (u/resolve-sym handler))))
 
 (defn- maybe-create-dir! [dir]

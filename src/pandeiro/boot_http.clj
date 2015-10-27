@@ -47,6 +47,7 @@
         worker      (pod/make-pod (update-in (core/get-env) [:dependencies]
                                              into deps))
         server-name (if httpkit "HTTP Kit" "Jetty")
+        env-dirs    (vec (core/get-env :directories))
         start       (delay
                      (pod/with-eval-in worker
                        (require '[pandeiro.boot-http.impl :as http]
@@ -56,7 +57,7 @@
                        (def server
                          (http/server
                           {:dir ~dir, :port ~port, :handler '~handler,
-                           :reload '~reload, :httpkit ~httpkit,
+                           :reload '~reload, :env-dirs ~env-dirs, :httpkit ~httpkit,
                            :resource-root ~resource-root}))
                        (def nrepl-server
                          (when ~nrepl
