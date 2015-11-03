@@ -1,3 +1,9 @@
+# 0.7.1-SNAPSHOT
+
+- Add: boot.properties file
+- Bump Boot version to 2.4.2
+- Fix: reload option now watches all source directories
+
 # 0.7.0
 
 - Add: -n/--nrepl flag for nREPL access to http server
