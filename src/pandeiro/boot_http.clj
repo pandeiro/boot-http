@@ -56,7 +56,7 @@
                        (def server
                          (http/server
                           {:dir ~dir, :port ~port, :handler '~handler,
-                           :reload '~reload, :httpkit ~httpkit,
+                           :reload '~reload, :env-dirs ~(vec (:directories pod/env)), :httpkit ~httpkit,
                            :resource-root ~resource-root}))
                        (def nrepl-server
                          (when ~nrepl
