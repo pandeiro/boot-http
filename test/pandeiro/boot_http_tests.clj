@@ -1,7 +1,7 @@
 (ns pandeiro.boot-http-tests
   (:require [clojure.test :refer :all]
             [clojure.java.io :as io]
-            [pandeiro.boot-http.impl :refer :all]
+            [pandeiro.boot-http.impl :refer [dir-handler index-file-exists?]]
             [pandeiro.boot-http.util :as u]))
 
 (deftest detect-index-files
@@ -23,3 +23,14 @@
   (testing "can invoke ns-qualified functions"
     (is (= :sample
            (u/resolve-and-invoke 'pandeiro.boot-http-tests-sample/sample-fn)))))
+
+(defn teapot-app [request]
+  {:status 418})
+
+(deftest not-found-handler
+  (let [req {:uri "/missing"}]
+    (testing "is called when serving a directory"
+      (is (= 404
+             (:status ((dir-handler {:dir "public"}) req))))
+      (is (= 418
+             (:status ((dir-handler {:dir "public" :not-found `teapot-app}) req)))))))

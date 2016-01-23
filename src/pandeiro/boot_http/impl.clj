@@ -55,10 +55,6 @@
 ;;
 ;; Handlers
 ;;
-(defn- not-found [_] ; ring.util.response version has no Content-Type
-  {:status  404
-   :headers {"Content-Type" "text/plain; charset=utf-8"}
-   :body    "Not found"})
 
 (defn ring-handler [{:keys [handler reload env-dirs]}]
   (when handler
@@ -72,11 +68,18 @@
       (util/warn "Directory '%s' was not found. Creating it..." dir)
       (.mkdirs dir-file))))
 
-(defn dir-handler [{:keys [dir resource-root]
+(defn not-found-handler [not-found]
+  (if not-found
+    (u/resolve-sym not-found)
+    (fn [_] {:status  404
+             :headers {"Content-Type" "text/plain; charset=utf-8"}
+             :body    "Not found"})))
+
+(defn dir-handler [{:keys [dir resource-root not-found]
                     :or {resource-root ""}}]
   (when dir
     (maybe-create-dir! dir)
-    (-> not-found
+    (-> (not-found-handler not-found)
       (wrap-resource resource-root)
       (wrap-file dir {:index-files? false})
       (wrap-index dir))))

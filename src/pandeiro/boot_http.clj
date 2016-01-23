@@ -37,7 +37,8 @@
    k httpkit            bool "Use Http-kit server instead of Jetty"
    s silent             bool "Silent-mode (don't output anything)"
    R reload             bool "Reload modified namespaces on each request."
-   n nrepl         REPL edn  "nREPL server parameters e.g. \"{:port 3001, :bind \"0.0.0.0\"}\""]
+   n nrepl         REPL edn  "nREPL server parameters e.g. \"{:port 3001, :bind \"0.0.0.0\"}\""
+   N not-found     SYM  sym "a ring handler for requested resources that aren't in your directory. Useful for pushState."]
 
   (let [port        (or port default-port)
         server-dep  (if httpkit httpkit-dep jetty-dep)
@@ -57,6 +58,7 @@
                          (http/server
                           {:dir ~dir, :port ~port, :handler '~handler,
                            :reload '~reload, :env-dirs ~(vec (:directories pod/env)), :httpkit ~httpkit,
+                           :not-found '~not-found,
                            :resource-root ~resource-root}))
                        (def nrepl-server
                          (when ~nrepl
