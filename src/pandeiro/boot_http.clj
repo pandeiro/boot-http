@@ -46,11 +46,11 @@
                       (seq nrepl) (conj nrepl-dep))
         worker      (pod/make-pod (update-in (core/get-env) [:dependencies]
                                              into deps))
-        server-name (if httpkit "HTTP Kit" "Jetty")
         start       (delay
                      (pod/with-eval-in worker
                        (require '[pandeiro.boot-http.impl :as http]
-                                '[pandeiro.boot-http.util :as u])
+                                '[pandeiro.boot-http.util :as u]
+                                '[boot.util :as boot])
                        (when '~init
                          (u/resolve-and-invoke '~init))
                        (def server
@@ -60,24 +60,23 @@
                            :resource-root ~resource-root}))
                        (def nrepl-server
                          (when ~nrepl
-                           (http/nrepl-server {:nrepl ~nrepl}))))
-                     (when-not silent
-                       (util/info
-                        "Started %s on http://localhost:%d\n"
-                        server-name port)))]
+                           (http/nrepl-server {:nrepl ~nrepl})))
+                       (when-not ~silent
+                         (boot/info "Started %s on http://localhost:%d\n"
+                               (:human-name server)
+                               (:local-port server)))))]
     (when (and silent (not httpkit))
       (silence-jetty!))
     (core/cleanup
      (pod/with-eval-in worker
+       (when nrepl-server
+         (when-not silent
+           (util/info "Stopping boot-http nREPL server"))
+         (.stop nrepl-server))
        (when server
          (when-not silent
-           (util/info "Stopping %s\n" server-name)))
-       (when nrepl-server
-         (util/info "Stopping boot-http nREPL server")
-         (.stop nrepl-server))
-       (if ~httpkit
-         (server)
-         (.stop server))
+           (util/info "Stopping %s\n" (:human-name server)))
+         ((:stop-server server)))
        (when '~cleanup
          (u/resolve-and-invoke '~cleanup))))
     (core/with-pre-wrap fileset
