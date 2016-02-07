@@ -92,6 +92,7 @@ resources can be found on the classpath, and then gets out of the way.
 #### -p / --port
 
 Use a specific port. A value of `0` will automatically bind to a free port.
+The actual port number being used is available as `:http-port` on the fileset.
 
 ```bash
 boot -d pandeiro/boot-http serve -d . -p 8888 wait

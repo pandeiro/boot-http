@@ -81,4 +81,4 @@
          (u/resolve-and-invoke '~cleanup))))
     (core/with-pre-wrap fileset
       @start
-      fileset)))
+      (assoc fileset :http-port (pod/with-eval-in worker (:local-port server))))))
