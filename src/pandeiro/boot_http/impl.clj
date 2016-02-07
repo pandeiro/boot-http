@@ -60,7 +60,7 @@
    :headers {"Content-Type" "text/plain; charset=utf-8"}
    :body    "Not found"})
 
-(defn ring-handler [{:keys [handler reload env-dirs]}]
+(defn wrap-handler [{:keys [handler reload env-dirs]}]
   (when handler
     (if reload
       (wrap-reload (u/resolve-sym handler) {:dirs (or env-dirs ["src"])})
@@ -92,23 +92,36 @@
                     (content-type "text/html")))))
       (wrap-resource resource-root)))
 
+(defn ring-handler [opts]
+  (or (wrap-handler opts)
+      (dir-handler opts)
+      (resources-handler opts)))
+
 ;;
 ;; Jetty / HTTP Kit
 ;;
+
+(defn- start-httpkit [handler opts]
+  (require 'org.httpkit.server)
+  (let [stop-server ((resolve 'org.httpkit.server/run-server) handler opts)]
+    (merge (meta stop-server)
+           {:stop-server stop-server
+            :human-name "HTTP Kit"})))
+
+(defn- start-jetty [handler opts]
+  (require 'ring.adapter.jetty)
+  (let [server ((resolve 'ring.adapter.jetty/run-jetty) handler opts)]
+    {:server server
+     :human-name "Jetty"
+     :local-port (-> server .getConnectors first .getLocalPort)
+     :stop-server #(.stop server)}))
+
 (defn server [{:keys [port httpkit] :as opts}]
-  (if httpkit
-    (require 'org.httpkit.server)
-    (require 'ring.adapter.jetty))
-  (let [handler (or (ring-handler opts)
-                    (dir-handler opts)
-                    (resources-handler opts))
-        run     (if httpkit
-                  (resolve 'org.httpkit.server/run-server)
-                  (resolve 'ring.adapter.jetty/run-jetty))]
-    (run (-> handler
-           (wrap-content-type)
-           (wrap-not-modified))
-      {:port port :join? false})))
+  ((if httpkit start-httpkit start-jetty)
+   (-> (ring-handler opts)
+       wrap-content-type
+       wrap-not-modified)
+   {:port port :join? false}))
 
 ;;
 ;; nREPL
