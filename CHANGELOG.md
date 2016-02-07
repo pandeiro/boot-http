@@ -1,3 +1,10 @@
+# 0.7.2
+
+- Add: accurate reporting / documentation of port 0
+- Add: initial tests for resources and directory handlers
+- Remove: explicit boot/core dependency
+- Remove: scope "provided" for clojure dependency
+
 # 0.7.1
 
 - Add: boot.properties file
