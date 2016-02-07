@@ -2,7 +2,6 @@
  :source-paths #{"src" "test"}
  :dev-dependencies '[[peridot "0.4.3"]]
  :dependencies     '[[org.clojure/clojure "1.7.0"  :scope "provided"]
-                     [boot/core           "2.3.0"  :scope "provided"]
                      [adzerk/bootlaces    "0.1.12" :scope "test"]
                      [adzerk/boot-test    "1.0.4"  :scope "test"]])
 
