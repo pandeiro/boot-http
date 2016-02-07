@@ -1,4 +1,4 @@
-# 0.7.1-SNAPSHOT
+# 0.7.1
 
 - Add: boot.properties file
 - Bump Boot version to 2.4.2
