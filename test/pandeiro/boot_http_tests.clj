@@ -1,8 +1,10 @@
 (ns pandeiro.boot-http-tests
-  (:require [clojure.test :refer :all]
-            [clojure.java.io :as io]
-            [pandeiro.boot-http.impl :refer :all]
-            [pandeiro.boot-http.util :as u]))
+  (:require
+   [clojure.test :refer :all]
+   [clojure.java.io :as io]
+   [peridot.core :refer [session request]]
+   [pandeiro.boot-http.impl :refer :all]
+   [pandeiro.boot-http.util :as u]))
 
 (deftest detect-index-files
   (let [index-html  (io/file "index.html")
@@ -23,3 +25,22 @@
   (testing "can invoke ns-qualified functions"
     (is (= :sample
            (u/resolve-and-invoke 'pandeiro.boot-http-tests-sample/sample-fn)))))
+
+(def body
+  (comp :body :response))
+
+(def slurp-body
+  (comp slurp body))
+
+(deftest builtin-handlers
+  (testing "default resources handler returns index.html resource"
+    (let [req (-> (session (resources-handler {}))
+                  (request "/"))]
+      (is (= (slurp-body req)
+             (slurp (io/resource "index.html"))))))
+  (testing "default directory handler returns index.html file"
+    (let [dir "test-extra/directory"
+          req (-> (session (dir-handler {:dir dir}))
+                  (request "/"))]
+      (is (= (body req)
+             (slurp (io/file (str dir "/index.html"))))))))
