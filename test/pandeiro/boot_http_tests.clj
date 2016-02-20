@@ -44,3 +44,14 @@
                   (request "/"))]
       (is (= (body req)
              (slurp (io/file (str dir "/index.html"))))))))
+
+(defn teapot-app [request]
+  {:status 418})
+
+(deftest not-found-handler
+  (let [req {:uri "/missing"}]
+    (testing "is called when serving a directory"
+      (is (= 404
+             (:status ((dir-handler {:dir "public"}) req))))
+      (is (= 418
+             (:status ((dir-handler {:dir "public" :not-found `teapot-app}) req)))))))
