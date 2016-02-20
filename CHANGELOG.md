@@ -1,3 +1,7 @@
+# 0.7.3
+
+- Add: not-found handler option and test
+
 # 0.7.2
 
 - Add: accurate reporting / documentation of port 0
