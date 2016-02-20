@@ -51,12 +51,6 @@ boot serve -d target wait   # or at the REPL: (boot (serve :dir "target") (wait)
 
 That would serve the `target` directory if it exists.
 
-Sometimes it is useful to customize the handling of 404s. This can be done by providing a ring handler as the `not-found` option:
-
-```bash
-boot serve -d target -N custom-not-found wait # (boot (serve :dir "target" :not-found "custom-not-found") (wait))
-```
-
 Instead of specifying a directory, you can also specify a ring handler:
 
 #### 3. Start server with given Ring handler
@@ -134,6 +128,15 @@ Silences all output.
 #### -R / --reload
 
 Wrap provided ring handler with ring-reload.
+
+#### -N / --not-found
+
+Use the provided symbol's function to handle requests for results that
+are not found.
+
+```bash
+boot serve -d target -N myapp.server/custom-not-found wait
+```
 
 ## API and Roadmap
 
