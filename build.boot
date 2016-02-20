@@ -10,7 +10,7 @@
  '[adzerk.boot-test :refer :all]
  '[pandeiro.boot-http :refer :all])
 
-(def +version+ "0.7.3")
+(def +version+ "0.7.4-SNAPSHOT")
 
 (bootlaces! +version+)
 
