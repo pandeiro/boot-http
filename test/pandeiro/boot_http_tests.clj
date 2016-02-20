@@ -48,7 +48,7 @@
 (defn teapot-app [request]
   {:status 418})
 
-(deftest not-found-handler
+(deftest not-found-handler-test
   (let [req {:uri "/missing"}]
     (testing "is called when serving a directory"
       (is (= 404
