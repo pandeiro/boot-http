@@ -54,4 +54,9 @@
       (is (= 404
              (:status ((dir-handler {:dir "public"}) req))))
       (is (= 418
-             (:status ((dir-handler {:dir "public" :not-found `teapot-app}) req)))))))
+             (:status ((dir-handler {:dir "public" :not-found `teapot-app}) req)))))
+    (testing "is called when serving a resource"
+      (is (= 404
+             (:status ((resources-handler {}) req))))
+      (is (= 418
+             (:status ((resources-handler {:not-found `teapot-app}) req)))))))

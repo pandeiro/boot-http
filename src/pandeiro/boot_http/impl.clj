@@ -84,15 +84,24 @@
       (wrap-file dir {:index-files? false})
       (wrap-index dir))))
 
-(defn resources-handler [{:keys [resource-root]
-                          :or {resource-root ""}}]
-  (-> (fn [{:keys [request-method uri] :as req}]
-        (if (and (= request-method :get))
-          ; Remove start slash and add end slash
-          (let [uri (if (.startsWith uri "/") (.substring uri 1) uri)
-                uri (if (.endsWith uri "/") uri (str uri "/"))]
-            (some-> (resource-response (str uri "index.html") {:root resource-root})
-                    (content-type "text/html")))))
+(defn index-resource-handler [resource-root]
+  (fn [{:keys [request-method uri]}]
+    (if (and (= request-method :get))
+      ; Remove start slash and add end slash
+      (let [uri (if (.startsWith uri "/") (.substring uri 1) uri)
+            uri (if (.endsWith uri "/") uri (str uri "/"))]
+        (some-> (resource-response (str uri "index.html") {:root resource-root})
+                (content-type "text/html"))))))
+
+(defn wrap-index-resource [handler resource-root]
+  (fn [req]
+    (or ((index-resource-handler resource-root) req)
+        (handler req))))
+
+(defn resources-handler [{:keys [resource-root not-found]
+                          :or   {resource-root ""}}]
+  (-> (not-found-handler not-found)
+      (wrap-index-resource resource-root)
       (wrap-resource resource-root)))
 
 (defn ring-handler [opts]
