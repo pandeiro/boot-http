@@ -8,6 +8,9 @@
 
 (def default-port 3000)
 
+;keystore can be file path or resource
+(def ssl-defaults {:port 3443 :keystore (str (clojure.java.io/resource "boot-http-keystore.jks")) :key-password "p@ssw0rd"})
+
 (def serve-deps
   '[[ring/ring-core "1.4.0"]
     [ring/ring-devel "1.4.0"]])
@@ -36,11 +39,18 @@
    p port          PORT int  "The port to listen on. (Default: 3000)"
    k httpkit            bool "Use Http-kit server instead of Jetty"
    s silent             bool "Silent-mode (don't output anything)"
+   t ssl                bool "Serve via Jetty SSL connector on localhost on default port 3443 using cert from ./boot-http-keystore.jks"
+   T ssl-props     SSL  edn  "Override default SSL properties e.g. \"{:port 3443, :keystore \"boot-http-keystore.jks\", :key-password \"p@ssw0rd\"}\""
    R reload             bool "Reload modified namespaces on each request."
    n nrepl         REPL edn  "nREPL server parameters e.g. \"{:port 3001, :bind \"0.0.0.0\"}\""
    N not-found     SYM  sym "a ring handler for requested resources that aren't in your directory. Useful for pushState."]
 
   (let [port        (or port default-port)
+        ssl-props   (when (or ssl ssl-props)
+                      (if (and ssl-props (not (map? ssl-props)))
+                        (throw (IllegalArgumentException.
+                                 (str "Expected map for ssl-props got \"" ssl-props "\"")))
+                        (merge ssl-defaults (or ssl-props {}))))
         server-dep  (if httpkit httpkit-dep jetty-dep)
         deps        (cond-> serve-deps
                       true        (conj server-dep)
@@ -57,6 +67,7 @@
                        (def server
                          (http/server
                           {:dir ~dir, :port ~port, :handler '~handler,
+                           :ssl-props ~ssl-props,
                            :reload '~reload, :env-dirs ~(vec (:directories pod/env)), :httpkit ~httpkit,
                            :not-found '~not-found,
                            :resource-root ~resource-root}))
@@ -64,8 +75,9 @@
                          (when ~nrepl
                            (http/nrepl-server {:nrepl ~nrepl})))
                        (when-not ~silent
-                         (boot/info "Started %s on http://localhost:%d\n"
+                         (boot/info "Started %s on %s://localhost:%d\n"
                                (:human-name server)
+                               (if ~ssl-props "https" "http")
                                (:local-port server)))))]
     (when (and silent (not httpkit))
       (silence-jetty!))
