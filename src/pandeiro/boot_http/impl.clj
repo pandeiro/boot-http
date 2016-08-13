@@ -132,15 +132,15 @@
 
 (defn nrepl-server [{:keys [nrepl]}]
   (require 'clojure.tools.nrepl.server)
-  (let [start-server    (resolve 'clojure.tools.nrepl.server/start-server)
-        default-handler (resolve 'clojure.tools.nrepl.server/default-handler)
-        handler         (when-let [mw (:middleware nrepl)]
-                          (apply default-handler mw))
-        opts            (->> (-> (assoc nrepl :handler handler)
-                                 (update :bind #(or % "127.0.0.1")))
-                             (reduce-kv #(if %3 (assoc %1 %2 %3) %1) {}))
-        repl-server     (apply start-server (mapcat identity opts))]
-    (util/info
-     "Started boot-http nREPL on nrepl://%s:%d\n"
-     (:bind opts) (:port repl-server))
+  (let [start-server      (resolve 'clojure.tools.nrepl.server/start-server)
+        default-handler   (resolve 'clojure.tools.nrepl.server/default-handler)
+        handler           (when-let [mw (:middleware nrepl)]
+                            (apply default-handler mw))
+        opts              (->> (-> (assoc nrepl :handler handler)
+                                   (update :bind #(or % "127.0.0.1")))
+                               (reduce-kv #(if %3 (assoc %1 %2 %3) %1) {}))
+        {port :port
+         :as repl-server} (apply start-server (mapcat identity opts))]
+    (doto (io/file ".nrepl-port") .deleteOnExit (spit port))
+    (util/info "Started boot-http nREPL on nrepl://%s:%d\n" (:bind opts) port)
     repl-server))
