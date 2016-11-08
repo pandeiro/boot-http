@@ -128,12 +128,19 @@
      :local-port (-> server .getConnectors first .getLocalPort)
      :stop-server #(.stop server)}))
 
-(defn server [{:keys [port httpkit] :as opts}]
+(defn server [{:keys [port httpkit ssl-props] :as opts}]
   ((if httpkit start-httpkit start-jetty)
    (-> (ring-handler opts)
        wrap-content-type
        wrap-not-modified)
-   {:port port :join? false}))
+    (cond-> {:port  port
+             :join? false}
+            (seq ssl-props)
+            (merge {:http?        false
+                    :ssl?         (boolean (seq ssl-props))
+                    :ssl-port     (:port ssl-props)
+                    :keystore     (:keystore ssl-props)
+                    :key-password (:key-password ssl-props)}))))
 
 ;;
 ;; nREPL
