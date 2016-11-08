@@ -1,3 +1,7 @@
+# 0.7.6
+
+- Add: load user-specific Boot nREPL middleware
+
 # 0.7.5
 
 - Add: -t/--ssl and -T/--ssl-props args for HTTPS support
