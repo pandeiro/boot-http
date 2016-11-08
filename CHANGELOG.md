@@ -1,3 +1,7 @@
+# 0.7.4
+
+- Fix: not-found handler applies to resource handler
+
 # 0.7.3
 
 - Add: not-found handler option and test
