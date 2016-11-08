@@ -4,7 +4,8 @@
    [boot.pod           :as pod]
    [boot.util          :as util]
    [boot.core          :as core :refer [deftask]]
-   [boot.task.built-in :as task]))
+   [boot.task.built-in :as task]
+   [boot.repl          :as repl]))
 
 (def default-port 3000)
 
@@ -21,8 +22,13 @@
 (def httpkit-dep
   '[http-kit "2.1.19"])
 
-(def nrepl-dep
-  '[org.clojure/tools.nrepl "0.2.11"])
+(defn nrepl-deps
+  []
+  (letfn [(tools-nrepl? [spec]
+            (= 'org.clojure/tools.nrepl (first spec)))]
+    (if-not (some tools-nrepl? @repl/*default-dependencies*)
+      (conj @repl/*default-dependencies* '[org.clojure/tools.nrepl "0.2.11"])
+      @repl/*default-dependencies*)))
 
 (defn- silence-jetty! []
   (.put (System/getProperties) "org.eclipse.jetty.LEVEL" "WARN"))
@@ -53,15 +59,23 @@
                         (merge ssl-defaults (or ssl-props {}))))
         server-dep  (if httpkit httpkit-dep jetty-dep)
         deps        (cond-> serve-deps
-                      true        (conj server-dep)
-                      (seq nrepl) (conj nrepl-dep))
+                      true               (conj server-dep)
+                      (not (nil? nrepl)) (concat (nrepl-deps)))
+
+        ;; Turn the middleware symbols into strings to prevent an attempt to
+        ;; resolve the namespaces when the list is processed in the Boot pod.
+        ;; Boot's middleware configuration is read outside of the pod to ensure
+        ;; that the user-specific Boot configuration is also captured.
+        middlewares (conj (map str @@(resolve 'boot.repl/*default-middleware*)) 'list)
+
         worker      (pod/make-pod (update-in (core/get-env) [:dependencies]
                                              into deps))
         start       (delay
                      (pod/with-eval-in worker
                        (require '[pandeiro.boot-http.impl :as http]
                                 '[pandeiro.boot-http.util :as u]
-                                '[boot.util :as boot])
+                                '[boot.util               :as boot]
+                                '[boot.repl-server        :as rsrv])
                        (when '~init
                          (u/resolve-and-invoke '~init))
                        (def server
@@ -73,7 +87,7 @@
                            :resource-root ~resource-root}))
                        (def nrepl-server
                          (when ~nrepl
-                           (http/nrepl-server {:nrepl ~nrepl})))
+                           (http/nrepl-server {:nrepl (assoc ~nrepl :middleware (rsrv/->mw-list (map symbol ~middlewares)))})))
                        (when-not ~silent
                          (boot/info "Started %s on %s://localhost:%d\n"
                                (:human-name server)
