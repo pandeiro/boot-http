@@ -1,3 +1,7 @@
+# 0.7.5
+
+- Add: -t/--ssl and -T/--ssl-props args for HTTPS support
+
 # 0.7.4
 
 - Fix: not-found handler applies to resource handler

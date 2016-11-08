@@ -5,7 +5,7 @@ that can serve resources, directories or a typical ring handler.
 
 [](dependency)
 ```clojure
-[pandeiro/boot-http "0.7.4"] ;; latest release
+[pandeiro/boot-http "0.7.5"] ;; latest release
 ```
 [](/dependency)
 
@@ -133,6 +133,11 @@ Wrap provided ring handler with ring-reload.
 
 Use the provided symbol's function to handle requests for results that
 are not found.
+
+#### -t / --ssl
+
+Serve over HTTPS (see `-T / --ssl-props` as well): Jetty only.
+
 
 ```bash
 boot serve -d target -N myapp.server/custom-not-found wait
