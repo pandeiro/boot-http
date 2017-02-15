@@ -7,6 +7,7 @@
              [file :refer [wrap-file]]
              [resource :refer [wrap-resource]]
              [content-type :refer [wrap-content-type]]
+             [default-charset :refer [wrap-default-charset]]
              [not-modified :refer [wrap-not-modified]]
              [reload :refer [wrap-reload]]]
             [pandeiro.boot-http.util :as u]
@@ -132,7 +133,8 @@
   ((if httpkit start-httpkit start-jetty)
    (-> (ring-handler opts)
        wrap-content-type
-       wrap-not-modified)
+       wrap-not-modified
+       (wrap-default-charset "utf-8"))
     (cond-> {:port  port
              :join? false}
             (seq ssl-props)

@@ -14,6 +14,7 @@
 
 (def serve-deps
   '[[ring/ring-core "1.4.0"]
+    [ring/ring-headers "0.2.0"]
     [ring/ring-devel "1.4.0"]])
 
 (def jetty-dep
