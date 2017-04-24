@@ -1,3 +1,7 @@
+# 0.8.0
+
+- Fix: cleanup handlers properly shut down Jetty and nREPL servers
+
 # 0.7.6
 
 - Add: load user-specific Boot nREPL middleware
