@@ -98,12 +98,12 @@
     (core/cleanup
      (pod/with-eval-in worker
        (when nrepl-server
-         (when-not silent
-           (util/info "Stopping boot-http nREPL server"))
+         (when-not ~silent
+           (boot/info "Stopping boot-http nREPL server"))
          (.stop nrepl-server))
        (when server
-         (when-not silent
-           (util/info "Stopping %s\n" (:human-name server)))
+         (when-not ~silent
+           (boot/info "Stopping %s\n" (:human-name server)))
          ((:stop-server server)))
        (when '~cleanup
          (u/resolve-and-invoke '~cleanup))))
