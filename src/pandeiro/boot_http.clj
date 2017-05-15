@@ -58,9 +58,9 @@
                                  (str "Expected map for ssl-props got \"" ssl-props "\"")))
                         (merge ssl-defaults (or ssl-props {}))))
         server-dep  (if httpkit httpkit-dep jetty-dep)
-        deps        (cond-> serve-deps
-                      true               (conj server-dep)
-                      (not (nil? nrepl)) (concat (nrepl-deps)))
+        deps        (-> serve-deps
+                        (conj server-dep)
+                        (concat (nrepl-deps)))
 
         ;; Turn the middleware symbols into strings to prevent an attempt to
         ;; resolve the namespaces when the list is processed in the Boot pod.
