@@ -1,3 +1,8 @@
+# 0.8.2
+
+- Add: serve responses with charset UTF-8 by default
+- Add: charset option for changing default charset
+
 # 0.8.1
 
 - Fix: always add nREPL dependency
