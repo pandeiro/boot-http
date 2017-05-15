@@ -1,3 +1,7 @@
+# 0.8.1
+
+- Fix: always add nREPL dependency
+
 # 0.8.0
 
 - Fix: cleanup handlers properly shut down Jetty and nREPL servers
