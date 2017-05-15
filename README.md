@@ -59,6 +59,10 @@ Instead of specifying a directory, you can also specify a ring handler:
 boot serve -H myapp.server/app -R wait   # (boot (serve :handler 'myapp.server/app :reload true) (wait))
 ```
 
+Note: boot-http will automatically wrap responses in middlewares to
+add content type and charset (see `--charset` option) to response
+headers.
+
 ### Composability
 
 You may have noticed the `wait` task being used after all the
@@ -142,6 +146,10 @@ Serve over HTTPS (see `-T / --ssl-props` as well): Jetty only.
 ```bash
 boot serve -d target -N myapp.server/custom-not-found wait
 ```
+
+#### -S / --charset
+
+Charset to use when serving resources or files. Defaults to UTF-8.
 
 ## API and Roadmap
 

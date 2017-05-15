@@ -50,7 +50,8 @@
    T ssl-props     SSL  edn  "Override default SSL properties e.g. \"{:port 3443, :keystore \"boot-http-keystore.jks\", :key-password \"p@ssw0rd\"}\""
    R reload             bool "Reload modified namespaces on each request."
    n nrepl         REPL edn  "nREPL server parameters e.g. \"{:port 3001, :bind \"0.0.0.0\"}\""
-   N not-found     SYM  sym "a ring handler for requested resources that aren't in your directory. Useful for pushState."]
+   N not-found     SYM  sym  "a ring handler for requested resources that aren't in your directory. Useful for pushState."
+   S charset       CHAR str  "charset to use when serving static resources and files. (Default: utf-8)"]
 
   (let [port        (or port default-port)
         ssl-props   (when (or ssl ssl-props)

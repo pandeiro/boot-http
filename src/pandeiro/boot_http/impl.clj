@@ -129,12 +129,12 @@
      :local-port (-> server .getConnectors first .getLocalPort)
      :stop-server #(.stop server)}))
 
-(defn server [{:keys [port httpkit ssl-props] :as opts}]
+(defn server [{:keys [port httpkit ssl-props charset] :as opts}]
   ((if httpkit start-httpkit start-jetty)
    (-> (ring-handler opts)
        wrap-content-type
        wrap-not-modified
-       (wrap-default-charset "utf-8"))
+       (wrap-default-charset (or charset "utf-8")))
     (cond-> {:port  port
              :join? false}
             (seq ssl-props)
