@@ -1,3 +1,7 @@
+# 0.8.3
+
+- Fix: load nREPL dependency conditionally
+
 # 0.8.2
 
 - Add: serve responses with charset UTF-8 by default
