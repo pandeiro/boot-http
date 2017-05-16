@@ -149,10 +149,12 @@
 ;;
 
 (defn nrepl-server [{:keys [nrepl]}]
-  (require 'clojure.tools.nrepl.server)
+  (require '[clojure.tools.nrepl.server]
+           '[boot.repl-server])
   (let [start-server      (resolve 'clojure.tools.nrepl.server/start-server)
         default-handler   (resolve 'clojure.tools.nrepl.server/default-handler)
-        handler           (when-let [mw (:middleware nrepl)]
+        ->mw-list         (resolve 'boot.repl-server/->mw-list)
+        handler           (when-let [mw (->mw-list (:middleware nrepl))]
                             (apply default-handler mw))
         opts              (->> (-> (assoc nrepl :handler handler)
                                    (update :bind #(or % "127.0.0.1")))
