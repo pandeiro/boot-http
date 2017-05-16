@@ -60,9 +60,9 @@
                                  (str "Expected map for ssl-props got \"" ssl-props "\"")))
                         (merge ssl-defaults (or ssl-props {}))))
         server-dep  (if httpkit httpkit-dep jetty-dep)
-        deps        (-> serve-deps
-                        (conj server-dep)
-                        (concat (nrepl-deps)))
+        deps        (cond-> serve-deps
+                      true               (conj server-dep)
+                      (not (nil? nrepl)) (concat (nrepl-deps)))
 
         ;; Turn the middleware symbols into strings to prevent an attempt to
         ;; resolve the namespaces when the list is processed in the Boot pod.
@@ -76,8 +76,7 @@
                      (pod/with-eval-in worker
                        (require '[pandeiro.boot-http.impl :as http]
                                 '[pandeiro.boot-http.util :as u]
-                                '[boot.util               :as boot]
-                                '[boot.repl-server        :as rsrv])
+                                '[boot.util               :as boot])
                        (when '~init
                          (u/resolve-and-invoke '~init))
                        (def server
@@ -89,7 +88,7 @@
                            :resource-root ~resource-root}))
                        (def nrepl-server
                          (when ~nrepl
-                           (http/nrepl-server {:nrepl (assoc ~nrepl :middleware (rsrv/->mw-list (map symbol ~middlewares)))})))
+                           (http/nrepl-server {:nrepl (assoc ~nrepl :middleware (map symbol ~middlewares))})))
                        (when-not ~silent
                          (boot/info "Started %s on %s://localhost:%d\n"
                                (:human-name server)
